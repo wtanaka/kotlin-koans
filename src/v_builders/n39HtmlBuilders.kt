@@ -2,11 +2,12 @@ package v_builders
 
 import util.TODO
 import util.doc39
+import v_builders.data.Product
 import v_builders.data.getProducts
 import v_builders.htmlLibrary.*
 
 fun getTitleColor() = "#b9c9fe"
-fun getCellColor(row: Int, column: Int) = if ((row + column) %2 == 0) "#dce4ff" else "#eff2ff"
+fun getCellColor(row: Int, column: Int) = if ((row + column) % 2 == 0) "#dce4ff" else "#eff2ff"
 
 fun todoTask39(): Nothing = TODO(
     """
@@ -23,18 +24,26 @@ fun renderProductTable(): String {
     return html {
         table {
             tr {
-                td {
+                td(color = getTitleColor()) {
                     text("Product")
                 }
-                td {
+                td(color = getTitleColor()) {
                     text("Price")
                 }
-                td {
+                td(color = getTitleColor()) {
                     text("Popularity")
                 }
             }
             val products = getProducts()
-            todoTask39()
+            products.forEachIndexed { row, product ->
+                tr {
+                    arrayOf(Product::description, Product::price, Product::popularity).forEachIndexed { column, property ->
+                        td(color = getCellColor(row, column)) {
+                            text(property(product))
+                        }
+                    }
+                }
+            }
         }
     }.toString()
 }
